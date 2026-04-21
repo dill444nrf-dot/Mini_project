@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
     //   custom exception untuk not found
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<WebResponse<String>> handleNotFound(NotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 WebResponse.<String>builder()
                         .status("Fail")
                         .message(e.getMessage())
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
     // method salah
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<WebResponse<String>> handleMethodNotAllowed(HttpRequestMethodNotSupportedException e) {
-        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 WebResponse.<String>builder()
                         .status("fail")
                         .message("Method tidak diizinkan")
@@ -74,29 +74,18 @@ public class GlobalExceptionHandler {
         );
     }
 
-//    @ExceptionHandler(RuntimeException.class )
-//    public WebResponse<String> handleResponseStatusException(RuntimeException e) {
-//        return WebResponse.<String>builder()
-//                .status("fail")
-//                .message("SKU CODE TIDAK BOLEH SAMA")
-//                .data(null)
-//                .build();
-//    }
-
     // untuk menghandle error yg tidak tertangkap
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<WebResponse<String>> handleGeneral(Exception e) {
-//        e.printStackTrace();
-//
-//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-//                WebResponse.<String>builder()
-//                        .status("Error")
-//                        .message(e.getMessage())
-//                        .data(null)
-//                        .build()
-//        );
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<WebResponse<String>> handleRuntime(Exception e) {
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                WebResponse.<String>builder()
+                        .status("Error")
+                        .message(e.getMessage())
+                        .data(null)
+                        .build()
+        );
     }
-
-
+}
 
 

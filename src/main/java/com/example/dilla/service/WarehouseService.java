@@ -23,6 +23,21 @@ public class WarehouseService {
         return repository.findAll();
     }
 
+    public Warehouse update(Long id, Warehouse request) {
+        Warehouse warehouse = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Warehouse tidak ditemukan dengan id:" +id));
+
+        if(repository.existsByCodeAndIdNot(request.getCode(),id)) {
+            throw new IllegalArgumentException("kode gudang sudah digunakan:" + request.getCode());
+        }
+
+        warehouse.setCode(request.getCode());
+        warehouse.setName(request.getName());
+
+        return repository.save(warehouse);
+    }
+
+
     public Warehouse getById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Warehouse tidak ditemukan"));
