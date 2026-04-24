@@ -3,10 +3,13 @@
     import com.example.dilla.exception.NotFoundException;
     import com.example.dilla.model.*;
     import com.example.dilla.repository.*;
+    import org.springframework.data.domain.PageRequest;
+    import org.springframework.data.domain.Pageable;
     import org.springframework.stereotype.Service;
     import org.springframework.transaction.annotation.Transactional;
 
     import java.time.LocalDateTime;
+    import java.util.List;
 
     @Service
     public class StockService {
@@ -105,9 +108,21 @@
             mutation.setFromWarehouse(fromStock.getWarehouse());
             mutation.setToWarehouse(warehouseTo);
             mutation.setQuantity(qty);
-            mutation.setType("TRANSFER");
+            mutation.setType("OUT");
             mutation.setTimestamp(LocalDateTime.now());
 
             mutationRepository.save(mutation);
+        }
+
+        //fitur baru
+        public List<StockMutation> getLatestMutation(String type) {
+
+            Pageable pageable = PageRequest.of(0, 5);
+
+            String filter = (type == null || type.isBlank())
+                    ? "ALL"
+                    : type.toUpperCase();
+
+            return mutationRepository.findLatestMutation(filter, pageable);
         }
     }
