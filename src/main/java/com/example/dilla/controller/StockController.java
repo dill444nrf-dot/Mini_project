@@ -1,10 +1,13 @@
 package com.example.dilla.controller;
 
 import com.example.dilla.Request.StockMutationRequest;
+import com.example.dilla.model.StockMutation;
 import com.example.dilla.response.WebResponse;
 import com.example.dilla.service.StockService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/stock")
@@ -48,6 +51,18 @@ public class StockController {
                 .status("Success")
                 .message("Transfer berhasil")
                 .data(null)
+                .build();
+    }
+
+    @GetMapping("/mutation")
+    public WebResponse<List<StockMutation>> getMutation(
+            @RequestParam(defaultValue = "ALL") String type
+    ) {
+
+        return WebResponse.<List<StockMutation>>builder()
+                .status("Success")
+                .message("Data mutation berhasil diambil")
+                .data(service.getLatestMutation(type))
                 .build();
     }
 }
