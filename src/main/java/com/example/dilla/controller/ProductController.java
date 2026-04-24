@@ -90,4 +90,21 @@ public class ProductController {
                 .data(service.getStockSummary(sku))
                 .build();
     }
+    @DeleteMapping("/{id}")
+    public WebResponse<String> hardDelete(@PathVariable Long id, Product product) {
+        service.hardDelete(id);
+
+        try {
+            service.hardDelete(id);
+            return WebResponse.<String>builder()
+                    .status("Success")
+                    .message("Product berhasil dihapus permanen")
+                    .build();
+        } catch (RuntimeException e) {
+            return WebResponse.<String>builder()
+                    .status("Failed")
+                    .message(e.getMessage())
+                    .build();
+        }
+    }
 }

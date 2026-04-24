@@ -1,9 +1,12 @@
 package com.example.dilla.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -14,8 +17,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+    private Boolean isActive = true;
 
     @Column(name = "sku_code", unique = true, nullable = false)
     private String skuCode;
@@ -30,7 +32,18 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @JsonIgnore
+    // Relasi one-to-many ke WarehouseStock
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true )
+    private List<WarehouseStock> warehouseStocks;
+
+    @JsonIgnore
+    //relasi one-to-many stock mutation
+    @OneToMany(mappedBy = "product")
+    private List<StockMutation> stockMutations;
+
     //Optimis locking
     @Version
     private Long version;
 }
+
